@@ -1,0 +1,292 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Convert any PDF to MP4</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/w3.css' %}">
+    <style>
+        .main  {
+            top: 50%;
+            left: 50%;
+            width:50em;
+            height:33em;
+            margin-top: -15em;
+            margin-left: -25em;
+            border: 2px solid #ccc;
+        {#background-color: #f3f3f3;#}
+            position:fixed;
+        }
+
+        .file-upload {
+            background-color: #ffffff;
+            width: 40em;
+        {#height: 14em;#}
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .file-upload-btn {
+            width: 100%;
+            margin: 0;
+            color: #fff;
+            background: #1FB264;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            border-bottom: 4px solid #15824B;
+            transition: all .2s ease;
+            outline: none;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .file-upload-btn:hover {
+            background: #1AA059;
+            color: #ffffff;
+            transition: all .2s ease;
+            cursor: pointer;
+        }
+
+        .file-upload-btn:active {
+            border: 0;
+            transition: all .2s ease;
+        }
+
+        .file-upload-content {
+            display: none;
+            text-align: center;
+        }
+
+        .file-upload-input {
+            position: absolute;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            outline: none;
+            opacity: 0;
+            cursor: pointer;
+        }
+        {##}
+        {#.image-upload-wrap {#}
+        {#    margin-top: 20px;#}
+        {#    border: 4px dashed #1FB264;#}
+        {#    position: relative;#}
+        {#}#}
+
+        {#.image-dropping,#}
+        {#.image-upload-wrap:hover {#}
+        {#    background-color: #1FB264;#}
+        {#    border: 4px dashed #ffffff;#}
+        {#}#}
+
+        .image-title-wrap {
+            padding: 0 15px 15px 15px;
+            color: #222;
+        }
+
+        .drag-text {
+            text-align: center;
+        }
+
+        .drag-text h4 {
+            font-weight: 50;
+            text-transform: uppercase;
+            color: #15824B;
+            padding: 5px 0;
+        }
+
+        .file-upload-image {
+            max-height: 200px;
+            max-width: 200px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .remove-image {
+            width: 200px;
+            margin: 0;
+            color: #fff;
+            background: #cd4535;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            border-bottom: 4px solid #b02818;
+            transition: all .2s ease;
+            outline: none;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .remove-image:hover {
+            background: #c13b2a;
+            color: #ffffff;
+            transition: all .2s ease;
+            cursor: pointer;
+        }
+
+        .remove-image:active {
+            border: 0;
+            transition: all .2s ease;
+        }
+
+
+
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Pdf to Mp3</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      
+      <li class="nav-item active">
+        <a class="nav-link" href="/home">Pdf to Mp3 <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="/text">Text to Language <span class="sr-only">(current)</span></a>
+      </li>
+    </form>
+  </div>
+</nav>   
+<div class="main w3-card-4">
+
+    <h4 class="text-center text-uppercase w3-xlarge text-">Convert any pdf to mp3</h4>
+    <div class="w3-center">
+        <form  id='form' method="post"  enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <div class="file-upload text-center">
+                    <button class="file-upload-btn btn" type="button"
+                            onclick="$('.file-upload-input').trigger( 'click' )"
+                            aria-describedby="help"
+                    >
+                        Add PDF File
+                    </button>
+                    <br>
+                    <br>
+                    <div style="color: red;">
+                        {{ form.pdf_file.errors }}
+                    </div>
+
+                    <small id="help" class="form-text text-muted">Only PDF files allowed.</small>
+                    <h6 class='text-bold'>Please note that processing  may take time depending on the size of your pdf file.</h6>
+                    <br>
+                        {{ form.pdf_file }}
+
+{#                    <input type="file" class="file-upload-input w3-hide" onchange="readURL(this);" id="pdf_file">#}
+                    <div class="file-upload-content" id="displayDetail">
+                        <h6> You are about to convert <span class="image-title"></span> to MP3</h6>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary text-uppercase w3-card-4 btn-lg w3-xlarge " id="submit">Convert</button>
+                Language:<select name="lg">
+                            <option value="en">English (India)</option>
+                            <option value="fr">French (Canada)</option>
+                            <option value="es">Spanish (Spain</option>
+                            <option value="en">English (Australia)</option>
+                            <option value="zh-CN">Mandarin (China Mainland)</option>
+                            <option value="pt">Portuguese (Brazil)</option>
+                            <option value="af">Afrikaans</option>
+                            <option value="sq">Albanian</option>
+                            <option value="it">Italian</option>
+                            <option value="lt">Latin</option>
+                            <option value="ro">Romanian</option>
+                            <option value="ru">Russion</option>
+                            <option value="ta">Tamil</option>
+                            <option value="th">Tai</option>
+                            <option value="hi">Hindi</option>
+                            
+                         </select>
+                {% if audio_url %}
+                 <br><br>
+                  <button type="submit" class="btn w3-khaki text-capitalize w3-card-4 btn-lg">
+                    <a href="{{ audio_url }}" download="{{public}}" target='blank'>play/download</a>
+                  </button>
+        {#{{ audio_url }}#}
+                {% endif %}
+                <textarea rows="5" cols="30">
+                    {{ text }}
+                </textarea>
+                <div class="w3-hide" id="loading">
+                    <img src="{% static 'img/loading1.gif' %}" alt="" width="150">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="{% static 'js/core/jquery.js' %}"></script>
+<script src="{% static 'js/core/bootstrap.js' %}"></script>
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                $('.image-upload-wrap').hide();
+
+                $('.file-upload-image').attr('src', e.target.result);
+                $('.file-upload-content').show();
+
+                $('.image-title').html(input.files[0].name);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+
+        } else {
+            removeUpload();
+        }
+    }
+
+    function removeUpload(process_upload) {
+        $('.file-upload-input').replaceWith($('.file-upload-input').clone());
+        $('.file-upload-content').hide();
+        $('.image-upload-wrap').show();
+    }
+    $('.image-upload-wrap').bind('dragover', function () {
+        $('.image-upload-wrap').addClass('image-dropping');
+    });
+    $('.image-upload-wrap').bind('dragleave', function () {
+        $('.image-upload-wrap').removeClass('image-dropping');
+    });
+
+
+{#AJAX Handler #}
+$("#form").submit(function (e) {
+    console.log("We are going");
+    $('#loading').removeClass('w3-hide');
+    $("#submit").prop("disabled", true)
+    var form = $('#form');
+    
+    $.ajax({
+        type:form.attr('method'),
+        url: form.attr('action'),
+        data: form.serialize().val(),
+        success:function(resp) {
+            if (resp.includes("html") ){
+                $('#loading').addClass('w3-hide');
+                {#window.location.href = "{% url 'region_index' %}"#}
+            }
+            else {
+                $("#resp").html(resp).css('color', 'red');
+                $('#loading').addClass('w3-hide');
+            }
+        }
+    });
+});
+{#data: {#}
+{#            'pdf_file': form.serialize(),#}
+{#            'csrfmiddlewaretoken': '{{ csrf_token }}',#}
+{#        },#}
+{#    url:'{% url 'process_upload' %}'#}
+</script>
+</body>
+</html>
